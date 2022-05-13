@@ -28,6 +28,6 @@ struct BookDetailViewModel {
         book.tags
     }
     var buyButton: String {
-        "Buy for \(book.price)"
+        "Buy for \(String(format: "%.2f", book.price))$"
     }
 }

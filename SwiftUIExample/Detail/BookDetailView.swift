@@ -15,19 +15,25 @@ struct BookDetailView: View {
         self.viewModel = viewModel
     }
 
-    @State var buy: Bool = false
+    @State private var showModal = false
+    @State private var showAlert = false
+    @State private var animate = false
 
     var body: some View {
         ScrollView(.vertical, showsIndicators: true) {
             VStack(alignment: .center, spacing: 10) {
-                Image(viewModel.poster)
-                    .foregroundColor(.white)
-                    .frame(width: 120, height: 180, alignment: .center)
-                    .aspectRatio(contentMode: .fit)
-                    .background(.black)
-                    .cornerRadius(12)
-                    .shadow(color: .black, radius: buy ? 8: 0, x: 0, y: buy ? 3: 0)
-                    .scaleEffect(buy ? 1.1 : 1)
+                Button(action: {
+
+                }, label: {
+                    Image(viewModel.poster)
+                        .foregroundColor(.white)
+                        .frame(width: 120, height: 180, alignment: .center)
+                        .aspectRatio(contentMode: .fit)
+                        .background(.black)
+                        .cornerRadius(12)
+                        .shadow(color: .black, radius: showModal ? 8: 0, x: 0, y: showModal ? 3: 0)
+                        .scaleEffect(showModal ? 1.1 : 1)
+                })
                 Text(viewModel.author)
                     .padding(.top, 10)
                     .foregroundColor(.gray)
@@ -49,28 +55,45 @@ struct BookDetailView: View {
                 Spacer()
                 Button {
                     withAnimation {
-                        buy.toggle()
+                        showModal.toggle()
                     }
                 } label: {
                     Text(viewModel.buyButton)
                 }
                 .padding(.init(top: 10, leading: 25, bottom: 10, trailing: 25))
                 .background(.black)
-                .foregroundColor(buy ? .gray : .white)
+                .foregroundColor(showModal ? .gray : .white)
                 .cornerRadius(20)
             }
             .multilineTextAlignment(.center)
         }
+        .navigationBarItems(trailing:
+                                Button(action: {
+                                    self.showModal = true
+                                }) {
+                                    Text("Cart")
+                                }
+                                .foregroundColor(.white)
+                                .background(.blue)
+                                .padding()
+                                .sheet(isPresented: self.$showModal, onDismiss: { self.reload() }) {
+                                    CartView(viewModel: CartViewModel(books: [Book.mock,
+                                                                              Book.mock,
+                                                                              Book.mock,
+                                                                              Book.mock]),
+                                             showModal: self.$showModal)
+                                }
+        )
+        
+    }
+
+    func reload() {
+        print("Idk how to reload")
     }
 }
 
 struct BookDetailView_Previews: PreviewProvider {
-    static var viewModel = BookDetailViewModel(book: Book(author: "J.R.R Tolkien",
-                                                 title: "The Fellowship of the Ring",
-                                                 description: "The future of civilization rests in the fate of the One Ring, which has been lost for centuries. Powerful forces are unrelenting in their search for it. But fate has placed it in the hands of a young Hobbit named Frodo Baggins (Elijah Wood), who inherits the Ring and steps into legend.",
-                                                 price: "18.85$",
-                                                 poster: "MoviePoster",
-                                                 tags: ["Fantasy", "Action", "Novel"]))
+    static var viewModel = BookDetailViewModel(book: Book.mock)
     static var previews: some View {
         NavigationView {
             BookDetailView(viewModel: viewModel)
