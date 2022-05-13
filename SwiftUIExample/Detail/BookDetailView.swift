@@ -16,24 +16,13 @@ struct BookDetailView: View {
     }
 
     @State private var showModal = false
-    @State private var showAlert = false
-    @State private var animate = false
+
+   private var hover = false
 
     var body: some View {
         ScrollView(.vertical, showsIndicators: true) {
             VStack(alignment: .center, spacing: 10) {
-                Button(action: {
-
-                }, label: {
-                    Image(viewModel.poster)
-                        .foregroundColor(.white)
-                        .frame(width: 120, height: 180, alignment: .center)
-                        .aspectRatio(contentMode: .fit)
-                        .background(.black)
-                        .cornerRadius(12)
-                        .shadow(color: .black, radius: showModal ? 8: 0, x: 0, y: showModal ? 3: 0)
-                        .scaleEffect(showModal ? 1.1 : 1)
-                })
+                BookCover(viewModel.cover)
                 Text(viewModel.author)
                     .padding(.top, 10)
                     .foregroundColor(.gray)
@@ -67,28 +56,56 @@ struct BookDetailView: View {
             }
             .multilineTextAlignment(.center)
         }
+        .sheet(isPresented: self.$showModal, onDismiss: { }) {
+            CartView(viewModel: CartViewModel(books: [Book.mock,
+                                                      Book.mock,
+                                                      Book.mock,
+                                                      Book.mock]),
+                     showModal: self.$showModal)
+        }
         .navigationBarItems(trailing:
-                                Button(action: {
-                                    self.showModal = true
-                                }) {
-                                    Text("Cart")
-                                }
-                                .foregroundColor(.white)
-                                .background(.blue)
-                                .padding()
-                                .sheet(isPresented: self.$showModal, onDismiss: { self.reload() }) {
-                                    CartView(viewModel: CartViewModel(books: [Book.mock,
-                                                                              Book.mock,
-                                                                              Book.mock,
-                                                                              Book.mock]),
-                                             showModal: self.$showModal)
-                                }
+            Button(action: {
+                self.showModal = true
+            }) {
+                Image(systemName: "cart.circle")
+                    .padding(10)
+            }
         )
         
     }
 
     func reload() {
         print("Idk how to reload")
+    }
+
+
+    struct BookCover: View {
+        let cover: String
+        public init(_ cover: String) {
+            self.cover = cover
+        }
+
+        @State private var hover = false
+        var animation: Animation {
+            .easeIn(duration: 1)
+        }
+        var body: some View {
+            Image(cover)
+                .foregroundColor(.white)
+                .frame(width: 120, height: 180, alignment: .center)
+                .aspectRatio(contentMode: .fit)
+                .background(.black)
+                .cornerRadius(12)
+                .shadow(color: .black.opacity(0.3), radius: hover ? 8: 0, x: 0, y: hover ? 6: 0)
+                .scaleEffect(hover ? 1 : 0.8)
+                .onAppear() {
+                    DispatchQueue.main.async {
+                        withAnimation(animation) {
+                            self.hover = true
+                        }
+                    }
+                }
+        }
     }
 }
 

@@ -39,7 +39,7 @@ struct CartView: View {
                     .foregroundColor(.gray)
                 ForEach(viewModel.books, id: \.self) { book in
                     CartItemView(name: book.title,
-                                 image: book.poster,
+                                 image: book.cover,
                                  price: book.price,
                                  jiggling: self.$jiggling,
                                  rotationValue: self.$rotation_angle,

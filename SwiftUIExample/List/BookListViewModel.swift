@@ -8,9 +8,17 @@
 import Foundation
 
 struct BookListViewModel {
-    var books: [Book]
 
-    func book(for index: Int) {
+    let repository: BookRepository
+
+    init(repository: BookRepository = BookRepository()) {
+        self.repository = repository
+    }
+
+    var books: [Book] {
+        repository.books
+    }
+    func book(for index: Int) -> Book {
         books[index]
     }
 }

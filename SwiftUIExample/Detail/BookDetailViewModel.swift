@@ -21,8 +21,8 @@ struct BookDetailViewModel {
     var description: String {
         book.description
     }
-    var poster: String {
-        book.poster
+    var cover: String {
+        book.cover
     }
     var tags: [String] {
         book.tags

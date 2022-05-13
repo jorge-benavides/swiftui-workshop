@@ -17,20 +17,23 @@ struct BookListView: View {
 
     var body: some View {
         NavigationView {
-            Text("")
+            List(viewModel.books) { book in
+                NavigationLink(destination: {
+                    LazyView {
+                        BookDetailView(viewModel: BookDetailViewModel(book: book))
+                    }
+                }, label: {
+                    Text(book.title)
+                })
+
+            }
             .navigationTitle("Books")
         }
     }
 }
 
 struct BookListView_Previews: PreviewProvider {
-    static var viewModel = BookListViewModel(books: [
-        Book.mock,
-        Book.mock,
-        Book.mock,
-        Book.mock,
-        Book.mock
-    ])
+    static var viewModel = BookListViewModel()
     static var previews: some View {
         BookListView(viewModel: viewModel)
         .previewDevice("iPhone 13")
