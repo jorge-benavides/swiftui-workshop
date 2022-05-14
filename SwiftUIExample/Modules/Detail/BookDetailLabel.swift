@@ -7,11 +7,14 @@
 
 import SwiftUI
 
-struct BookDetailLabel: View {
+public struct BookDetailLabel: View {
+    private var text: String
 
-    var text: String
-
-    var body: some View {
+    public init(_ text: String) {
+        self.text = text
+    }
+    
+    public var body: some View {
         Text(text)
             .fontWeight(.semibold)
             .padding(10)
@@ -24,6 +27,6 @@ struct BookDetailLabel: View {
 
 struct BookDetailLabelView_Previews: PreviewProvider {
     static var previews: some View {
-        BookDetailLabel(text: "Fantasy")
+        BookDetailLabel("Fantasy")
     }
 }

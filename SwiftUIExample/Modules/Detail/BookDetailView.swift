@@ -7,20 +7,22 @@
 
 import SwiftUI
 
-struct BookDetailView: View {
+public struct BookDetailView: View {
 
-    @EnvironmentObject var cart: Cart
+    @EnvironmentObject
+    private var cart: Cart
 
     @ObservedObject
-    var viewModel: BookDetailViewModel
+    private var viewModel: BookDetailViewModel
 
-    init(viewModel: BookDetailViewModel) {
+    public init(viewModel: BookDetailViewModel) {
         self.viewModel = viewModel
     }
 
-    @State private var showModal = false
+    @State
+    private var showModal = false
 
-    var body: some View {
+    public var body: some View {
         ScrollView(.vertical, showsIndicators: true) {
             VStack(alignment: .center, spacing: 10) {
                 BookCoverView(viewModel.cover)
@@ -37,7 +39,7 @@ struct BookDetailView: View {
                     .lineLimit(4)
                 HStack(spacing: 10) {
                     ForEach(viewModel.tags, id: \.self) { title in
-                        BookDetailLabel(text: title)
+                        BookDetailLabel(title)
                     }
                 }
                 Spacer()
@@ -71,13 +73,15 @@ struct BookDetailView: View {
             }
         )
     }
-    func showCart(addingBook: Bool = false) {
+    /// will present modally the cart view with the option of adding the book on display
+    private func showCart(addingBook: Bool = false) {
         if addingBook {
             self.cart.addItem(viewModel.book)
         }
         self.showModal = true
     }
-    func reload() {
+    /// tells the view model to reload the data in case the user completed checkout
+    private func reload() {
         viewModel.reload()
     }
 }

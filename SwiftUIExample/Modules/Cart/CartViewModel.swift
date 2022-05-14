@@ -7,25 +7,26 @@
 
 import Foundation
 
-enum CartViewModelActions {
+public enum CartViewModelActions {
     case checkout
 }
 
-struct CartViewModel {
+public struct CartViewModel {
     private var cart: Cart
 
     public init(cart: Cart) {
         self.cart = cart
     }
 
-    var items: [Book] {
+    public var items: [Book] {
         cart.items
     }
-    var total: Double {
-        cart.total
+    public var total: String {
+        "$\(String(format: "%.2f", cart.total))"
     }
 
-    func trigger(_ action: CartViewModelActions) {
+    /// propagates user action to the share cart instance
+    public func trigger(_ action: CartViewModelActions) {
         switch action {
         case .checkout:
             cart.checkout()

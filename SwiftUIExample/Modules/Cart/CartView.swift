@@ -7,29 +7,33 @@
 
 import SwiftUI
 
-struct CartView: View {
+public struct CartView: View {
 
-    let viewModel: CartViewModel
+    private let viewModel: CartViewModel
 
-    @Binding var showModal: Bool
-    @State private var showingAlert = false
+    @Binding
+    private var showModal: Bool
+    @State
+    private var showingAlert = false
 
-    @State private var jiggling = false
-    @State private var jiggling_counter = 0
+    @State
+    private var jiggling = false
+    @State
+    private var jiggling_counter = 0
 
-    @State var scale_effect = 1.2
-    @State var rotation_angle_base: Double = 15
-    @State private var rotation_angle: Double = 0
+    @State
+    private var scale_effect = 1.2
+    @State
+    private var rotation_angle_base: Double = 15
+    @State
+    private var rotation_angle: Double = 0
 
     public init(viewModel: CartViewModel, showModal: Binding<Bool>) {
         self.viewModel = viewModel
         self._showModal = showModal
     }
 
-    var animation: Animation {
-        .easeInOut
-    }
-    var body: some View {
+    public var body: some View {
         VStack(alignment: .center) {
             Text("Your Bag")
                 .font(.title)
@@ -37,14 +41,12 @@ struct CartView: View {
             Text("\(viewModel.items.count) items")
                 .foregroundColor(.gray)
             ForEach(viewModel.items, id: \.self) { book in
-                CartItemView(name: book.title,
-                             image: book.cover,
-                             price: book.price,
+                CartItemView(viewModel: CartItemViewModel(book: book),
                              jiggling: self.$jiggling,
                              rotationValue: self.$rotation_angle,
                              scaleValue: self.$scale_effect)
             }
-            CartItemView(name: "Total:", image: "DeliverIcon", price: viewModel.total)
+            CartItemView(viewModel: CartItemViewModel(title: "Total:", image: "DeliverIcon", price: viewModel.total))
             Divider().padding()
             Button(action: {
                 self.showingAlert.toggle()
@@ -67,7 +69,7 @@ struct CartView: View {
         }
     }
 
-    func jiggle_shipping_icon(apply_delay: Bool) {
+    private func jiggle_shipping_icon(apply_delay: Bool) {
         DispatchQueue.main.asyncAfter(deadline: .now() + (apply_delay ? 5 : 0)) {
             withAnimation() {
                 jiggling.toggle()
@@ -92,25 +94,6 @@ struct CartView: View {
                 }
             }
         }
-    }
-}
-
-
-
-struct CheckoutButton: View {
-    let title: String
-    public init(_ title: String) {
-        self.title = title
-    }
-    var body: some View {
-        Text(title)
-            .font(.title2)
-            .bold()
-            .padding()
-            .padding(.horizontal, 50)
-            .foregroundColor(.white)
-            .background(.yellow)
-            .cornerRadius(40)
     }
 }
 

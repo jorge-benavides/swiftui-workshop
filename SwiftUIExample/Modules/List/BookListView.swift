@@ -7,24 +7,27 @@
 
 import SwiftUI
 
-struct BookListView: View {
-    @EnvironmentObject var repository: BookRepository
+public struct BookListView: View {
+    @EnvironmentObject
+    private var repository: BookRepository
 
     @ObservedObject
-    var viewModel: BookListViewModel
+    private var viewModel: BookListViewModel
 
-    init(viewModel: BookListViewModel) {
+    public init(viewModel: BookListViewModel) {
         self.viewModel = viewModel
     }
     
-    var body: some View {
+    public var body: some View {
         NavigationView {
             List(viewModel.books) { book in
                 NavigationLink(destination: {
+                    // Will prevent to load the view untill the user navigates
                     LazyView {
                         detailView(book)
                     }
                     .onDisappear() {
+                        // on comming back we reload the data
                         reload()
                     }
                 }, label: {
@@ -36,15 +39,18 @@ struct BookListView: View {
         .navigationViewStyle(StackNavigationViewStyle())
     }
 
-    func itemView(_ book: Book) -> some View {
+    /// creates an configures the cellview for the list
+    private func itemView(_ book: Book) -> some View {
         BookListItemView(viewModel: BookListItemViewModel(book: book))
     }
 
-    func detailView(_ book: Book) -> some View {
+    /// creates a book detailview with his dependency view model
+    private func detailView(_ book: Book) -> some View {
         BookDetailView(viewModel: BookDetailViewModel(book: book, repository: repository))
     }
 
-    func reload() {
+    /// reload book states when viewModel updates the property
+    private func reload() {
         viewModel.reload()
     }
 }

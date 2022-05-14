@@ -7,17 +7,21 @@
 
 import Foundation
 
-class BookListViewModel: ObservableObject {
+public class BookListViewModel: ObservableObject {
 
-    @Published var books: [Book] = []
+    /// data array for view
+    @Published
+    public var books: [Book] = []
 
+    /// single source of truth for book catalog
     private let repository: BookRepository
 
-    init(_ repository: BookRepository) {
+    public init(_ repository: BookRepository) {
         self.repository = repository
         self.reload()
     }
 
+    /// fetch asynchronously the books from repository
     public func reload() {
         self.repository.getBooks { books in
             self.books = books

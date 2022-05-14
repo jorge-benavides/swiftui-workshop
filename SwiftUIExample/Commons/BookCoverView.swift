@@ -7,17 +7,17 @@
 
 import SwiftUI
 
-struct BookCoverView: View {
-    let cover: String
-    let width: CGFloat?
+public struct BookCoverView: View {
+    private let cover: String
+    private let width: CGFloat?
 
     public init(_ cover: String, width: CGFloat? = 120) {
         self.cover = cover
         self.width = width
     }
 
-    var aspectRatio: CGFloat = 0.6
-    var height: CGFloat? {
+    private var aspectRatio: CGFloat = 0.6
+    private var height: CGFloat? {
         guard let width = width else {
             return nil
         }
@@ -27,7 +27,7 @@ struct BookCoverView: View {
     @State
     private var hover = false
 
-    var body: some View {
+    public var body: some View {
         Image(cover)
             .resizable()
             .frame(width: width,

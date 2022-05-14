@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Mocks {
+public struct Mocks {
     static var fellow = Book(id: UUID().uuidString,
                              title: "The Fellowship of the Ring",
                              author: "J.R.R Tolkien",

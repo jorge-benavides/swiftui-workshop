@@ -7,12 +7,16 @@
 
 import SwiftUI
 
-struct LazyView<T: View>: View {
-    let build: () -> T
-    init(_ build: @escaping () -> T) {
+public struct LazyView<T: View>: View {
+    /// building clouser for the view
+    private let build: () -> T
+
+    public init(_ build: @escaping () -> T) {
         self.build = build
     }
-    var body: T {
+
+    /// will lazily load a view when required
+    public var body: T {
         build()
     }
 }

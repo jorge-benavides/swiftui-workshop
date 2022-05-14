@@ -9,23 +9,20 @@ import SwiftUI
 
 public struct CartItemView: View {
     
-    let name: String
-    let image: String
-    let price: Double
+    private let viewModel: CartItemViewModel
 
-    @Binding var jiggling: Bool
-    @Binding var rotationValue: Double
-    @Binding var scaleValue: Double
-
-    public init(name: String,
-                image: String,
-                price: Double,
+    @Binding
+    private var jiggling: Bool
+    @Binding
+    private var rotationValue: Double
+    @Binding
+    private var scaleValue: Double
+    
+    public init(viewModel: CartItemViewModel,
                 jiggling: Binding<Bool> = .constant(false),
                 rotationValue: Binding<Double> = .constant(0),
                 scaleValue: Binding<Double> = .constant(0)) {
-        self.name = name
-        self.image = image
-        self.price = price
+        self.viewModel = viewModel
         self._jiggling = jiggling
         self._rotationValue = rotationValue
         self._scaleValue = scaleValue
@@ -33,7 +30,7 @@ public struct CartItemView: View {
     
     public var body: some View {
         HStack {
-            Image(image)
+            Image(viewModel.image)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 60, height: 60, alignment: .center)
@@ -43,9 +40,9 @@ public struct CartItemView: View {
                 .animation(.linear(duration: 0.15), value: jiggling)
 
             VStack(alignment: .leading) {
-                Text(name)
+                Text(viewModel.title)
                     .foregroundColor(.gray)
-                Text(String(format: "$%.2f", price))
+                Text(viewModel.price)
                     .font(.title)
                     .bold()
             }
@@ -56,7 +53,7 @@ public struct CartItemView: View {
 
 struct CardItemView_Previews: PreviewProvider {
     static var previews: some View {
-        CartItemView(name: Mocks.fellow.title, image: Mocks.fellow.cover, price: Mocks.fellow.price)
+        CartItemView(viewModel: CartItemViewModel(book: Mocks.fellow))
     }
 }
 

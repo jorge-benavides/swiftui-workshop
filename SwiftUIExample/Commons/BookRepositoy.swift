@@ -7,7 +7,7 @@
 
 import Foundation
 
-class BookRepository: ObservableObject {
+public class BookRepository: ObservableObject {
 
     private var catalog: [Book] = [
         Mocks.fellow,

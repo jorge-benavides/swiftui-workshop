@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct Book: Identifiable, Hashable {
-    let id: String
-    let title: String
-    let author: String
-    let description: String
-    var price: Double
-    let cover: String
-    var stock: Int
-    let tags: [String]
+public struct Book: Identifiable, Hashable {
+    public let id: String
+    public let title: String
+    public let author: String
+    public let description: String
+    public var price: Double
+    public let cover: String
+    public var stock: Int
+    public let tags: [String]
 }

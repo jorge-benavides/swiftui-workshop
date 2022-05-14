@@ -7,28 +7,28 @@
 
 import Foundation
 
-class Cart: ObservableObject {
+public class Cart: ObservableObject {
+    private let repository: BookRepository
 
-    let repository: BookRepository
     public init(repository: BookRepository) {
         self.repository = repository
     }
 
-    @Published var items: [Book] = []
-    @Published var total: Double = 0
+    @Published public var items: [Book] = []
+    @Published public var total: Double = 0
 
-    func addItem(_ book: Book) {
+    public func addItem(_ book: Book) {
         items.append(book)
         total += book.price
     }
 
-    func removeItem(_ book: Book) {
+    public func removeItem(_ book: Book) {
         guard let index = items.firstIndex(of: book) else { return }
         items.remove(at: index)
         total -= book.price
     }
 
-    func checkout() {
+    public func checkout() {
         items.forEach { book in
             var book = book
             book.price += 1

@@ -7,22 +7,22 @@
 
 import Foundation
 
-struct BookListItemViewModel {
+public struct BookListItemViewModel {
     private let book: Book
     
     public init(book: Book) {
         self.book = book
     }
-    var cover: String {
+    public var cover: String {
         book.cover
     }
-    var author: String {
+    public var author: String {
         "By \(book.author)"
     }
-    var title: String {
+    public var title: String {
         book.title
     }
-    var price: String {
+    public var price: String {
         "$\(String(format: "%.2f", book.price))"
     }
 }

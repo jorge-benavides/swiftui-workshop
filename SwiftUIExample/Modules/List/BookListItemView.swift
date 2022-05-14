@@ -7,15 +7,15 @@
 
 import SwiftUI
 
-struct BookListItemView: View {
+public struct BookListItemView: View {
 
-    let viewModel: BookListItemViewModel
+    private let viewModel: BookListItemViewModel
 
     public init(viewModel: BookListItemViewModel) {
         self.viewModel = viewModel
     }
 
-    var body: some View {
+    public var body: some View {
         HStack(alignment: .center, spacing: 10) {
             BookCoverView(viewModel.cover, width: 80)
                 .padding()
@@ -33,10 +33,6 @@ struct BookListItemView: View {
             }
             .multilineTextAlignment(.leading)
         }
-    }
-
-    func reload() {
-        print("Idk how to reload")
     }
 }
 
