@@ -37,6 +37,7 @@ public struct CartItemView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 60, height: 60, alignment: .center)
+                .padding(.horizontal, 30)
                 .rotationEffect(.degrees(jiggling ? Double(rotationValue) : 0))
                 .scaleEffect(jiggling ? scaleValue : 1)
                 .animation(.linear(duration: 0.15), value: jiggling)
@@ -48,8 +49,14 @@ public struct CartItemView: View {
                     .font(.title)
                     .bold()
             }
-            .padding(.horizontal, 30)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
-
 }
+
+struct CardItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        CartItemView(name: Mocks.fellow.title, image: Mocks.fellow.cover, price: Mocks.fellow.price)
+    }
+}
+

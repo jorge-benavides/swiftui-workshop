@@ -9,7 +9,10 @@ import SwiftUI
 
 struct BookDetailView: View {
 
-    let viewModel: BookDetailViewModel
+    @EnvironmentObject var cart: Cart
+
+    @ObservedObject
+    var viewModel: BookDetailViewModel
 
     init(viewModel: BookDetailViewModel) {
         self.viewModel = viewModel
@@ -17,12 +20,10 @@ struct BookDetailView: View {
 
     @State private var showModal = false
 
-   private var hover = false
-
     var body: some View {
         ScrollView(.vertical, showsIndicators: true) {
             VStack(alignment: .center, spacing: 10) {
-                BookCover(viewModel.cover)
+                BookCoverView(viewModel.cover)
                 Text(viewModel.author)
                     .padding(.top, 10)
                     .foregroundColor(.gray)
@@ -44,7 +45,7 @@ struct BookDetailView: View {
                 Spacer()
                 Button {
                     withAnimation {
-                        showModal.toggle()
+                        showCart(addingBook: true)
                     }
                 } label: {
                     Text(viewModel.buyButton)
@@ -56,61 +57,33 @@ struct BookDetailView: View {
             }
             .multilineTextAlignment(.center)
         }
-        .sheet(isPresented: self.$showModal, onDismiss: { }) {
-            CartView(viewModel: CartViewModel(books: [Book.mock,
-                                                      Book.mock,
-                                                      Book.mock,
-                                                      Book.mock]),
-                     showModal: self.$showModal)
+        .sheet(isPresented: self.$showModal, onDismiss: {
+            reload()
+        }) {
+            CartView(viewModel: CartViewModel(cart: cart), showModal: self.$showModal)
         }
         .navigationBarItems(trailing:
             Button(action: {
-                self.showModal = true
+                showCart()
             }) {
                 Image(systemName: "cart.circle")
                     .padding(10)
             }
         )
-        
     }
-
+    func showCart(addingBook: Bool = false) {
+        if addingBook {
+            self.cart.addItem(viewModel.book)
+        }
+        self.showModal = true
+    }
     func reload() {
-        print("Idk how to reload")
-    }
-
-
-    struct BookCover: View {
-        let cover: String
-        public init(_ cover: String) {
-            self.cover = cover
-        }
-
-        @State private var hover = false
-        var animation: Animation {
-            .easeIn(duration: 1)
-        }
-        var body: some View {
-            Image(cover)
-                .foregroundColor(.white)
-                .frame(width: 120, height: 180, alignment: .center)
-                .aspectRatio(contentMode: .fit)
-                .background(.black)
-                .cornerRadius(12)
-                .shadow(color: .black.opacity(0.3), radius: hover ? 8: 0, x: 0, y: hover ? 6: 0)
-                .scaleEffect(hover ? 1 : 0.8)
-                .onAppear() {
-                    DispatchQueue.main.async {
-                        withAnimation(animation) {
-                            self.hover = true
-                        }
-                    }
-                }
-        }
+        viewModel.reload()
     }
 }
 
 struct BookDetailView_Previews: PreviewProvider {
-    static var viewModel = BookDetailViewModel(book: Book.mock)
+    static var viewModel = BookDetailViewModel(book: Mocks.fellow, repository: BookRepository())
     static var previews: some View {
         NavigationView {
             BookDetailView(viewModel: viewModel)
@@ -123,6 +96,6 @@ struct BookDetailView_Previews: PreviewProvider {
                 }
             })
         }
-        .previewDevice("iPhone 13")
+        .previewSetup()
     }
 }

@@ -30,30 +30,30 @@ struct CartView: View {
         .easeInOut
     }
     var body: some View {
-        HStack(alignment: .top) {
-            VStack(alignment: .center) {
-                Text("Your Bag")
-                    .font(.title)
-                    .bold()
-                Text("\(viewModel.books.count) items")
-                    .foregroundColor(.gray)
-                ForEach(viewModel.books, id: \.self) { book in
-                    CartItemView(name: book.title,
-                                 image: book.cover,
-                                 price: book.price,
-                                 jiggling: self.$jiggling,
-                                 rotationValue: self.$rotation_angle,
-                                 scaleValue: self.$scale_effect)
-                }
-                CartItemView(name: "Total:", image: "DeliverIcon", price: viewModel.books.map({ $0.price }).reduce(0, +))
-                Divider().padding()
-                Button(action: {
-                    self.showingAlert.toggle()
-                }, label: {
-                    CheckoutButton("Checkout")
-                })
+        VStack(alignment: .center) {
+            Text("Your Bag")
+                .font(.title)
+                .bold()
+            Text("\(viewModel.items.count) items")
+                .foregroundColor(.gray)
+            ForEach(viewModel.items, id: \.self) { book in
+                CartItemView(name: book.title,
+                             image: book.cover,
+                             price: book.price,
+                             jiggling: self.$jiggling,
+                             rotationValue: self.$rotation_angle,
+                             scaleValue: self.$scale_effect)
             }
+            CartItemView(name: "Total:", image: "DeliverIcon", price: viewModel.total)
+            Divider().padding()
+            Button(action: {
+                self.showingAlert.toggle()
+            }, label: {
+                CheckoutButton("Checkout")
+            })
         }
+        .padding()
+        .frame(maxHeight: .infinity, alignment: .top)
         .onAppear() {
             jiggle_shipping_icon(apply_delay: false)
         }
@@ -115,8 +115,15 @@ struct CheckoutButton: View {
 }
 
 struct CardView_Previews: PreviewProvider {
+    static var cart: Cart {
+        let c = Cart(repository: BookRepository())
+        c.addItem(Mocks.towers)
+        c.addItem(Mocks.man)
+        c.addItem(Mocks.homo)
+        return c
+    }
     static var previews: some View {
-        CartView(viewModel: CartViewModel(books: [Book.mock, Book.mock, Book.mock]),
+        CartView(viewModel: CartViewModel(cart: cart),
                  showModal: .constant(true))
         .previewDevice("iPhone 13")
     }

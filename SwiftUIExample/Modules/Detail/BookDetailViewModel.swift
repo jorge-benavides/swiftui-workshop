@@ -7,10 +7,20 @@
 
 import Foundation
 
-struct BookDetailViewModel {
-    private let book: Book
-    public init(book: Book) {
+class BookDetailViewModel: ObservableObject {
+
+    @Published public var book: Book
+    private let repository: BookRepository
+
+    public init(book: Book, repository: BookRepository) {
         self.book = book
+        self.repository = repository
+    }
+    public func reload() {
+        repository.getBook(id: book.id, completion: { book in
+            guard let book = book else { return }
+            self.book = book
+        })
     }
     var author: String {
         book.author
@@ -23,6 +33,9 @@ struct BookDetailViewModel {
     }
     var cover: String {
         book.cover
+    }
+    var stock: Int {
+        book.stock
     }
     var tags: [String] {
         book.tags
